@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="ru" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Станислав & Виктория | Premium Wedding</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Montserrat:wght@100;200;300;400;500&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'bg-main': '#070707',
+                        'bg-surface': '#111111',
+                        'text-main': '#F2F2F2',
+                        'text-muted': '#888888',
+                        'accent': '#C2A882', // Золото/Шампань
+                    },
+                    fontFamily: {
+                        'serif': ['"Cormorant Garamond"', 'serif'],
+                        'sans': ['Montserrat', 'sans-serif'],
+                    },
+                    letterSpacing: {
+                        'mega': '0.4em',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Сброс скроллбара */
+        ::-webkit-scrollbar { display: none; }
+        body { -ms-overflow-style: none; scrollbar-width: none; background-color: #000; color: #F2F2F2; }
+
+        /* 1. Прелоадер */
+        #preloader {
+            transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1), visibility 1.2s;
+        }
+
+        /* 2. Макро-типографика (Bleeding Edge) */
+        .bleed-text {
+            white-space: nowrap;
+            font-size: 32vw;
+            line-height: 0.7;
+            color: rgba(255, 255, 255, 0.03);
+            position: absolute;
+            z-index: 0;
+            pointer-events: none;
+            font-family: 'Cormorant Garamond', serif;
+        }
+
+        /* 3. Водяные знаки */
+        .watermark {
+            position: absolute;
+            font-size: 15rem;
+            line-height: 0.8;
+            font-family: 'Cormorant Garamond', serif;
+            color: rgba(255, 255, 255, 0.02);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* 4. Контролируемый хаос (Скотч для фото) */
+        .tape {
+            position: absolute;
+            width: 70px;
+            height: 22px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(4px);
+            box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+            z-index: 20;
+        }
+        .photo-polaroid {
+            background: #fff;
+            padding: 6px 6px 24px 6px;
+            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.8);
+        }
+
+        /* 5. Вращающийся стикер и винил */
+        .spin-slow { animation: spin 15s linear infinite; }
+        .vinyl-spin { animation: spin 4s linear infinite; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+
+        /* 6. Кинематографичный Reveal */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+        .delay-100 { transition-delay: 100ms; }
+        .delay-200 { transition-delay: 200ms; }
+
+        /* 7. Кастомный UI формы */
+        .premium-input {
+            width: 100%; background: transparent; border: none;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+            padding: 12px 0; font-family: 'Montserrat', sans-serif;
+            font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em;
+            color: #F2F2F2; transition: border-color 0.4s;
+        }
+        .premium-input:focus { outline: none; border-bottom-color: #C2A882; }
+        .premium-input::placeholder { color: #555; }
+        
+        .custom-radio input:checked + div { border-color: #C2A882; background-color: rgba(194, 168, 130, 0.1); }
+        .custom-radio input:checked + div .dot { background-color: #C2A882; transform: scale(1); }
+        
+        .custom-check input:checked + div { border-color: #C2A882; background-color: rgba(194, 168, 130, 0.1); }
+        .custom-check input:checked + div svg { opacity: 1; transform: scale(1); }
+
+        /* Фильтр для Мудборда */
+        .moodboard-filter { filter: grayscale(40%) sepia(20%) contrast(110%); }
+    </style>
+</head>
+<body class="antialiased font-sans">
+
+    <!-- ПРЕЛОАДЕР -->
+    <div id="preloader" class="fixed inset-0 z-[9999] bg-bg-main flex flex-col items-center justify-center">
+        <h1 class="font-serif text-5xl tracking-widest text-text-main animate-pulse">S <span class="text-accent italic">&</span> V</h1>
+        <p class="font-sans text-[8px] tracking-mega uppercase text-text-muted mt-4 animate-pulse">Загрузка</p>
+    </div>
+
+    <!-- АУДИО -->
+    <audio id="bgMusic" loop>
+        <source src="https://cdn.pixabay.com/download/audio/2022/01/21/audio_31743c58bb.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- МОБИЛЬНЫЙ ЭМУЛЯТОР (Mobile-First Architecture) -->
+    <main class="w-full max-w-[430px] mx-auto min-h-screen bg-bg-main relative shadow-[0_0_100px_rgba(0,0,0,1)] overflow-x-hidden sm:my-10 sm:rounded-[3rem] sm:border-[8px] sm:border-[#1a1a1a]">
+        
+        <!-- STICKY AUDIO (Винил) -->
+        <div class="absolute top-6 right-6 z-[100] sm:fixed sm:top-[calc(50vh-350px)] sm:right-[calc(50vw-190px)]">
+            <button id="audioBtn" class="w-12 h-12 rounded-full border border-white/20 bg-black/40 backdrop-blur-md flex items-center justify-center transition-transform hover:scale-105 shadow-xl">
+                <div id="vinyl" class="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center bg-[#111] relative">
+                    <div class="w-3 h-3 bg-accent rounded-full border-[2px] border-black"></div>
+                    <div class="absolute inset-0 rounded-full border-t border-white/30 transform -rotate-45"></div>
+                </div>
+            </button>
+        </div>
+
+        <!-- 1. HERO SECTION -->
+        <section class="relative w-full h-[100dvh] flex flex-col justify-between pt-16 pb-12 overflow-hidden z-10">
+            <!-- Видео с Poster для iOS -->
+            <div class="absolute inset-0 z-[-1]">
+                <video autoplay loop muted playsinline poster="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover opacity-60 moodboard-filter scale-105">
+                    <source src="https://assets.mixkit.co/videos/preview/mixkit-romantic-couple-walking-on-the-beach-at-sunset-52853-large.mp4" type="video/mp4">
+                </video>
+                <div class="absolute inset-0 bg-gradient-to-b from-bg-main via-transparent to-bg-main"></div>
+            </div>
+
+            <!-- Bleeding Edge Typography -->
+            <div class="bleed-text top-[20%] -left-4">S&V</div>
+
+            <div class="text-center px-6 reveal">
+                <p class="font-sans text-[8px] tracking-mega uppercase text-accent mb-4">Свадебное торжество</p>
+                <div class="w-8 h-px bg-accent mx-auto"></div>
+            </div>
+
+            <div class="text-center px-4 mt-auto mb-20 reveal delay-100">
+                <h1 class="font-serif text-[4rem] leading-[0.8] font-light mb-2">Станислав</h1>
+                <div class="flex items-center justify-center gap-3">
+                    <span class="font-serif text-3xl italic text-accent">&</span>
+                    <h1 class="font-serif text-[4rem] leading-[0.8] font-light">Виктория</h1>
+                </div>
+            </div>
+
+            <div class="text-center reveal delay-200">
+                <p class="font-sans text-[10px] tracking-mega uppercase text-text-main">20 Ноября 2026</p>
+                <div class="w-px h-12 bg-white/20 mx-auto mt-6"></div>
+            </div>
+        </section>
+
+        <!-- 2. LOVE STORY (Controlled Chaos) -->
+        <section class="py-24 px-6 relative z-20 bg-bg-main overflow-hidden">
+            <!-- Вращающийся стикер -->
+            <div class="absolute top-10 right-4 w-20 h-20 bg-accent rounded-full text-bg-main flex items-center justify-center shadow-2xl z-30 reveal">
+                <div class="relative w-full h-full flex items-center justify-center">
+                    <span class="font-sans text-[9px] uppercase tracking-widest font-bold z-10 text-center leading-tight">Love<br>Story</span>
+                    <svg class="absolute w-[68px] h-[68px] spin-slow" viewBox="0 0 100 100">
+                        <defs><path id="circlePath1" d="M 50, 50 m -35, 0 a 35,35 0 1,1 70,0 a 35,35 0 1,1 -70,0"/></defs>
+                        <text font-size="10" fill="rgba(0,0,0,0.4)" font-family="Montserrat" font-weight="600" letter-spacing="2"><textPath href="#circlePath1">ЧИСТЫЕ ЭМОЦИИ • ЧИСТЫЕ ЭМОЦИИ • </textPath></text>
+                    </svg>
+                </div>
+            </div>
+
+            <div class="relative w-full h-[420px] mb-12">
+                <!-- Фото 1 (Задний план) -->
+                <div class="absolute top-0 left-2 w-44 photo-polaroid transform -rotate-6 reveal delay-100 z-10 moodboard-filter">
+                    <div class="tape -top-2 left-1/2 transform -translate-x-1/2 rotate-2"></div>
+                    <img src="https://images.unsplash.com/photo-1520854221256-17451cc331bf?auto=format&fit=crop&w=400&q=80" class="w-full h-52 object-cover">
+                </div>
+                <!-- Фото 2 (Передний план, перекрытие) -->
+                <div class="absolute top-[120px] right-2 w-48 photo-polaroid transform rotate-3 reveal delay-200 z-20 moodboard-filter">
+                    <div class="tape -top-3 left-4 transform -rotate-3"></div>
+                    <img src="https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&w=400&q=80" class="w-full h-60 object-cover">
+                    <div class="absolute -bottom-6 left-4 font-serif italic text-2xl text-accent transform -rotate-6">навсегда</div>
+                </div>
+            </div>
+
+            <div class="text-center relative z-30 reveal px-4">
+                <h2 class="font-serif text-3xl mb-6">Дорогие близкие</h2>
+                <p class="font-sans font-light text-[11px] leading-loose text-text-muted">
+                    Этот день станет началом нашей счастливой истории. Мы приглашаем вас разделить с нами радость этого торжества и стать свидетелями рождения нашей семьи.
+                </p>
+                <button class="mt-8 flex items-center justify-center gap-3 border border-white/20 rounded-full px-6 py-3 font-sans text-[8px] uppercase tracking-widest mx-auto hover:border-accent transition-colors">
+                    <svg class="w-3 h-3 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                    В календарь
+                </button>
+            </div>
+        </section>
+
+        <!-- АСИММЕТРИЧНЫЙ СРЕЗ (К светлому) -->
+        <div class="relative w-full h-[80px] bg-bg-main z-10 overflow-hidden pointer-events-none">
+            <svg viewBox="0 0 400 80" preserveAspectRatio="none" class="absolute bottom-0 w-full h-full">
+                <path d="M0,80 C150,0 250,80 400,0 L400,80 Z" fill="#F4F4F4"></path>
+            </svg>
+        </div>
+
+        <!-- 3. ТАЙМИНГ (Асимметричный дизайн) -->
+        <section class="py-20 px-6 bg-[#F4F4F4] text-[#111] relative z-20">
+            <div class="text-center mb-16 reveal">
+                <p class="font-sans text-[8px] uppercase tracking-mega text-text-muted mb-3">Event Flow</p>
+                <h2 class="font-serif text-4xl">Программа дня</h2>
+            </div>
+
+            <div class="relative max-w-[320px] mx-auto pb-10">
+                <!-- Центральная линия -->
+                <div class="absolute left-1/2 transform -translate-x-1/2 top-4 bottom-4 w-px bg-black/10 z-0"></div>
+
+                <!-- 16:00 (Фото слева, текст справа) -->
+                <div class="relative w-full flex items-center mb-16 reveal">
+                    <div class="w-1/2 flex justify-end pr-5 relative z-10">
+                        <div class="w-20 h-20 rounded-full border-[3px] border-[#F4F4F4] overflow-hidden absolute right-[-40px] top-1/2 transform -translate-y-1/2 shadow-lg z-20">
+                            <img src="https://images.unsplash.com/photo-1511556532299-8f662fc26c06?auto=format&fit=crop&w=200&q=80" class="w-full h-full object-cover moodboard-filter">
+                        </div>
+                    </div>
+                    <div class="w-1/2 pl-8 z-10">
+                        <h3 class="font-serif text-3xl mb-1 text-[#111]">16:00</h3>
+                        <p class="font-sans text-[8px] font-bold uppercase tracking-widest text-accent mb-2">Сбор гостей</p>
+                        <p class="font-sans font-light text-[9px] text-[#555] leading-relaxed">Welcome-фуршет, шампанское</p>
+                    </div>
+                </div>
+
+                <!-- 17:00 (Текст слева, Фото справа) -->
+                <div class="relative w-full flex items-center mb-16 reveal delay-100">
+                    <div class="w-1/2 pr-8 text-right z-10">
+                        <h3 class="font-serif text-3xl mb-1 text-[#111]">17:00</h3>
+                        <p class="font-sans text-[8px] font-bold uppercase tracking-widest text-accent mb-2">Церемония</p>
+                        <p class="font-sans font-light text-[9px] text-[#555] leading-relaxed">Клятвы и обмен кольцами</p>
+                    </div>
+                    <div class="w-1/2 flex justify-start pl-5 relative z-10">
+                        <div class="w-24 h-24 rounded-full border-[3px] border-[#F4F4F4] overflow-hidden absolute left-[-48px] top-1/2 transform -translate-y-1/2 shadow-lg z-20">
+                            <img src="https://images.unsplash.com/photo-1606800052052-a08af7148866?auto=format&fit=crop&w=200&q=80" class="w-full h-full object-cover moodboard-filter">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 18:00 (Фото слева, текст справа) -->
+                <div class="relative w-full flex items-center reveal delay-200">
+                    <div class="w-1/2 flex justify-end pr-5 relative z-10">
+                        <div class="w-20 h-20 rounded-full border-[3px] border-[#F4F4F4] overflow-hidden absolute right-[-40px] top-1/2 transform -translate-y-1/2 shadow-lg z-20">
+                            <img src="https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&w=200&q=80" class="w-full h-full object-cover moodboard-filter">
+                        </div>
+                    </div>
+                    <div class="w-1/2 pl-8 z-10">
+                        <h3 class="font-serif text-3xl mb-1 text-[#111]">18:00</h3>
+                        <p class="font-sans text-[8px] font-bold uppercase tracking-widest text-accent mb-2">Ужин</p>
+                        <p class="font-sans font-light text-[9px] text-[#555] leading-relaxed">Банкет и танцы до утра</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. EDITORIAL DRESS-CODE -->
+        <section class="pb-24 px-6 bg-[#F4F4F4] text-[#111] relative z-20">
+            <div class="text-center mb-12 reveal">
+                <h2 class="font-serif text-4xl mb-4">Dress Code</h2>
+                <p class="font-sans font-light text-[10px] uppercase tracking-widest text-[#666] leading-loose max-w-[280px] mx-auto">
+                    Мы будем рады видеть вас в вечерних нарядах, поддерживающих нашу палитру.
+                </p>
+            </div>
+
+            <!-- Палитра -->
+            <div class="flex justify-center gap-3 mb-16 reveal delay-100">
+                <div class="w-8 h-8 rounded-full border border-black/10 shadow-inner" style="background-color: #050505;"></div>
+                <div class="w-8 h-8 rounded-full border border-black/10 shadow-inner" style="background-color: #333333;"></div>
+                <div class="w-8 h-8 rounded-full border border-black/10 shadow-inner" style="background-color: #C2A882;"></div>
+                <div class="w-8 h-8 rounded-full border border-black/10 shadow-inner" style="background-color: #EFEFEF;"></div>
+            </div>
+
+            <!-- Мудборд-сетка -->
+            <div class="relative w-full h-[580px] reveal">
+                <!-- Женщины -->
+                <div class="absolute top-0 left-0 w-[55%] z-10">
+                    <img src="https://images.unsplash.com/photo-1566737236500-c8ac43014a67?auto=format&fit=crop&w=400&q=80" class="w-full h-64 object-cover moodboard-filter shadow-lg">
+                    <p class="font-serif italic text-xl mt-3 text-accent">Для дам</p>
+                    <p class="font-sans text-[8px] uppercase tracking-widest text-[#666]">Вечерние платья</p>
+                </div>
+
+                <!-- Мужчины (Перекрытие) -->
+                <div class="absolute bottom-10 right-0 w-[60%] z-20">
+                    <img src="https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=400&q=80" class="w-full h-72 object-cover moodboard-filter shadow-2xl border-4 border-[#F4F4F4]">
+                    <p class="font-serif italic text-xl mt-3 text-right text-accent">Джентльмены</p>
+                    <p class="font-sans text-[8px] uppercase tracking-widest text-[#666] text-right">Строгие костюмы</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- АСИММЕТРИЧНЫЙ СРЕЗ (К темному) -->
+        <div class="relative w-full h-[80px] bg-bg-surface z-10 -mt-10 overflow-hidden pointer-events-none transform rotate-180 scale-x-[-1]">
+            <svg viewBox="0 0 400 80" preserveAspectRatio="none" class="absolute bottom-0 w-full h-full">
+                <path d="M0,80 C150,0 250,80 400,0 L400,80 Z" fill="#F4F4F4"></path>
+            </svg>
+        </div>
+
+        <!-- 5. LOCATION (Map + Glassmorphism) -->
+        <section class="pt-10 pb-20 px-6 bg-bg-surface relative z-20 text-center">
+            <div class="reveal mb-10">
+                <h2 class="font-serif text-4xl mb-2">Локация</h2>
+                <p class="font-sans font-light text-[10px] uppercase tracking-widest text-text-muted">Загородный клуб "Эмеральд"</p>
+            </div>
+
+            <div class="w-full h-[300px] rounded-[2rem] overflow-hidden relative shadow-2xl reveal delay-100 border border-white/5">
+                <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&w=800&q=80')] bg-cover bg-center grayscale opacity-40 mix-blend-screen"></div>
+                <div class="absolute bottom-6 left-6 right-6 bg-black/60 backdrop-blur-md border border-white/10 p-5 rounded-2xl text-center">
+                    <p class="font-sans font-medium text-[9px] uppercase tracking-widest text-text-main mb-4">Лесная аллея, 1</p>
+                    <a href="#" class="block w-full bg-text-main text-bg-main py-3 rounded-full font-sans text-[9px] font-bold tracking-mega uppercase hover:bg-accent transition-colors">
+                        Маршрут
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. DETAILS (Watermarks) -->
+        <section class="py-24 px-8 bg-bg-main relative z-20 overflow-hidden border-t border-white/5">
+            <h2 class="font-serif text-4xl mb-16 text-center reveal">Детали</h2>
+            
+            <div class="space-y-20">
+                <div class="relative reveal z-10">
+                    <span class="watermark -top-10 -left-6">1</span>
+                    <div class="relative z-10 pl-4">
+                        <h3 class="font-serif text-2xl text-accent mb-3">Подарки</h3>
+                        <p class="font-sans font-light text-[11px] leading-loose text-text-main/80">Пожалуйста, не утруждайте себя поиском материального подарка. Мы будем искренне признательны за ваш вклад в бюджет нашей семьи в конверте.</p>
+                    </div>
+                </div>
+                
+                <div class="relative reveal z-10 delay-100">
+                    <span class="watermark -top-10 -left-6">2</span>
+                    <div class="relative z-10 pl-4">
+                        <h3 class="font-serif text-2xl text-accent mb-3">Цветы</h3>
+                        <p class="font-sans font-light text-[11px] leading-loose text-text-main/80">Просим не дарить цветы, так как мы сразу улетаем в путешествие. Лучше замените их на бутылочку любимого вина для нашей коллекции.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 7. INTERACTIVE RSVP & TIMER -->
+        <section class="py-24 px-6 bg-bg-surface relative z-20 border-t border-white/5">
+            <div id="formContainer" class="reveal">
+                <div class="text-center mb-12">
+                    <h2 class="font-serif text-4xl mb-3">Анкета</h2>
+                    <p class="font-sans text-[8px] uppercase tracking-mega text-text-muted">Просим ответить до 1 Октября</p>
+                </div>
+
+                <form id="rsvpForm" class="space-y-10">
+                    <div>
+                        <input type="text" required placeholder="Ваше Имя и Фамилия" class="premium-input">
+                    </div>
+
+                    <div>
+                        <p class="font-sans text-[9px] font-semibold uppercase tracking-widest mb-4">Присутствие</p>
+                        <div class="space-y-3">
+                            <label class="flex items-center cursor-pointer custom-radio group">
+                                <input type="radio" name="att" value="yes" required class="hidden">
+                                <div class="w-4 h-4 rounded-full border border-text-muted flex items-center justify-center mr-4 transition-colors">
+                                    <div class="dot w-2 h-2 rounded-full bg-transparent transform scale-0 transition-transform"></div>
+                                </div>
+                                <span class="font-sans text-[11px] font-light text-text-muted group-hover:text-text-main transition-colors">Я буду с вами</span>
+                            </label>
+                            <label class="flex items-center cursor-pointer custom-radio group">
+                                <input type="radio" name="att" id="att-no" value="no" class="hidden">
+                                <div class="w-4 h-4 rounded-full border border-text-muted flex items-center justify-center mr-4 transition-colors">
+                                    <div class="dot w-2 h-2 rounded-full bg-transparent transform scale-0 transition-transform"></div>
+                                </div>
+                                <span class="font-sans text-[11px] font-light text-text-muted group-hover:text-text-main transition-colors">Вынужден отклонить</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div id="drinksBlock" class="pt-2 transition-all duration-300">
+                        <p class="font-sans text-[9px] font-semibold uppercase tracking-widest mb-4">Напитки</p>
+                        <div class="grid grid-cols-2 gap-4">
+                            <label class="flex items-center cursor-pointer custom-check group">
+                                <input type="checkbox" name="drink" class="hidden">
+                                <div class="w-4 h-4 border border-text-muted flex items-center justify-center mr-3 transition-colors text-accent">
+                                    <svg class="w-3 h-3 opacity-0 transform scale-0 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                </div>
+                                <span class="font-sans text-[10px] font-light text-text-muted group-hover:text-text-main transition-colors">Вино</span>
+                            </label>
+                            <label class="flex items-center cursor-pointer custom-check group">
+                                <input type="checkbox" name="drink" class="hidden">
+                                <div class="w-4 h-4 border border-text-muted flex items-center justify-center mr-3 transition-colors text-accent">
+                                    <svg class="w-3 h-3 opacity-0 transform scale-0 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                </div>
+                                <span class="font-sans text-[10px] font-light text-text-muted group-hover:text-text-main transition-colors">Игристое</span>
+                            </label>
+                            <label class="flex items-center cursor-pointer custom-check group">
+                                <input type="checkbox" name="drink" class="hidden">
+                                <div class="w-4 h-4 border border-text-muted flex items-center justify-center mr-3 transition-colors text-accent">
+                                    <svg class="w-3 h-3 opacity-0 transform scale-0 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                </div>
+                                <span class="font-sans text-[10px] font-light text-text-muted group-hover:text-text-main transition-colors">Крепкий алк.</span>
+                            </label>
+                            <label class="flex items-center cursor-pointer custom-check group">
+                                <input type="checkbox" name="drink" class="hidden">
+                                <div class="w-4 h-4 border border-text-muted flex items-center justify-center mr-3 transition-colors text-accent">
+                                    <svg class="w-3 h-3 opacity-0 transform scale-0 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                </div>
+                                <span class="font-sans text-[10px] font-light text-text-muted group-hover:text-text-main transition-colors">Б/А напитки</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="w-full bg-accent text-bg-main py-4 font-sans text-[10px] font-bold tracking-mega uppercase mt-8 hover:bg-white transition-colors">
+                        Подтвердить
+                    </button>
+                </form>
+            </div>
+
+            <!-- Экран успеха -->
+            <div id="successMessage" class="hidden text-center py-20 opacity-0 transition-opacity duration-1000">
+                <h3 class="font-serif text-3xl mb-2 text-accent">Благодарим</h3>
+                <p class="font-sans font-light text-[10px] text-text-muted tracking-widest uppercase">Ответ успешно сохранен</p>
+            </div>
+            
+            <!-- Таймер -->
+            <div class="mt-20 pt-16 border-t border-white/5 reveal text-center">
+                <h3 class="font-serif text-2xl mb-8 text-white/50 italic">Ожидание</h3>
+                <div class="flex justify-center gap-6 font-serif text-4xl text-text-main">
+                    <div>
+                        <span id="days" class="block">00</span>
+                        <span class="font-sans font-light text-[8px] tracking-[0.2em] uppercase text-text-muted mt-2 block">Дней</span>
+                    </div>
+                    <span class="text-text-muted/30 font-light">:</span>
+                    <div>
+                        <span id="hours" class="block">00</span>
+                        <span class="font-sans font-light text-[8px] tracking-[0.2em] uppercase text-text-muted mt-2 block">Часов</span>
+                    </div>
+                    <span class="text-text-muted/30 font-light">:</span>
+                    <div>
+                        <span id="minutes" class="block">00</span>
+                        <span class="font-sans font-light text-[8px] tracking-[0.2em] uppercase text-text-muted mt-2 block">Минут</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FOOTER -->
+        <footer class="bg-bg-main py-10 text-center relative z-20 border-t border-white/5">
+            <h2 class="font-serif text-xl tracking-[0.3em] text-text-muted uppercase">S & V</h2>
+        </footer>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // 1. Прелоадер
+            setTimeout(() => {
+                const preloader = document.getElementById('preloader');
+                preloader.style.opacity = '0';
+                setTimeout(() => preloader.style.visibility = 'hidden', 1200);
+            }, 1500);
+
+            // 2. Аудио (Винил)
+            const audio = document.getElementById('bgMusic');
+            const audioBtn = document.getElementById('audioBtn');
+            const vinyl = document.getElementById('vinyl');
+            let isPlaying = false;
+
+            audioBtn.addEventListener('click', () => {
+                if (isPlaying) {
+                    audio.pause();
+                    vinyl.classList.remove('vinyl-spin');
+                } else {
+                    audio.play().catch(e => console.log("Autoplay blocked."));
+                    vinyl.classList.add('vinyl-spin');
+                }
+                isPlaying = !isPlaying;
+            });
+
+            // 3. Кинематографичный Reveal
+            const observer = new IntersectionObserver((entries, obs) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                        obs.unobserve(entry.target); 
+                    }
+                });
+            }, { threshold: 0.15 });
+            document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+            // 4. Скрытие напитков при отказе
+            const radioButtons = document.querySelectorAll('input[name="att"]');
+            const drinksBlock = document.getElementById('drinksBlock');
+
+            radioButtons.forEach(radio => {
+                radio.addEventListener('change', (e) => {
+                    if (e.target.value === 'no') {
+                        drinksBlock.style.opacity = '0';
+                        drinksBlock.style.height = '0px';
+                        drinksBlock.style.overflow = 'hidden';
+                        drinksBlock.style.marginTop = '0px';
+                    } else {
+                        drinksBlock.style.opacity = '1';
+                        drinksBlock.style.height = 'auto';
+                        drinksBlock.style.overflow = 'visible';
+                        drinksBlock.style.marginTop = '10px';
+                    }
+                });
+            });
+
+            // 5. Логика формы (Fetch Webhook Placeholder)
+            const form = document.getElementById('rsvpForm');
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                // Конфигурация для реального Webhook (Make/n8n/Telegram)
+                const WEBHOOK_URL_PLACEHOLDER = "https://hook.your-service.com/xxxx"; 
+                // fetch(WEBHOOK_URL_PLACEHOLDER, { method: 'POST', body: new FormData(form) })
+                
+                const container = document.getElementById('formContainer');
+                container.style.opacity = '0';
+                
+                setTimeout(() => {
+                    container.style.display = 'none';
+                    const msg = document.getElementById('successMessage');
+                    msg.classList.remove('hidden');
+                    setTimeout(() => msg.style.opacity = '1', 50);
+                }, 500);
+            });
+
+            // 6. Таймер (Синтезирована дата: 20 Ноября 2026)
+            const weddingDate = new Date("Nov 20, 2026 16:00:00").getTime();
+            setInterval(() => {
+                const now = new Date().getTime();
+                const distance = weddingDate - now;
+                if (distance < 0) return;
+                
+                document.getElementById("days").innerText = Math.floor(distance / (1000 * 60 * 60 * 24)).toString().padStart(2, '0');
+                document.getElementById("hours").innerText = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)).toString().padStart(2, '0');
+                document.getElementById("minutes").innerText = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)).toString().padStart(2, '0');
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
+
